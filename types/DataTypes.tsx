@@ -1,44 +1,46 @@
 interface RecordType {
   imdbID: string;
-  title: string;
-  year: string;
-  type: string;
-  poster: string;
+  Title: string;
+  Year: string;
+  Type: string;
+  Poster: string;
 }
 
-type ReatingsType = {
-  source: string;
-  value: string;
+type RatingsType = {
+  Source: string;
+  Value: string;
 }
 
 interface RecordTypeExtended extends Partial<RecordType> {
-  released: string;
-  runtime: number;
-  genre: string;
-  ratings: ReatingsType[];
-  director: string;
-  writter: string;
-  actors: string;
-  plot: string;
-  language: string;
-  country: string;
-  awards: string;
-  metascore: number;
+  Released: string;
+  Runtime: string;
+  Genre: string;
+  Ratings: RatingsType[];
+  Director: string;
+  Writer: string;
+  Actors: string;
+  Plot: string;
+  Language: string;
+  Country: string;
+  Awards: string;
+  Metascore: number;
   imdbRating: number;
   imdbVotes: number;
-  repsonse: boolean;
+  response: boolean;
 }
 
 interface MovieType extends RecordTypeExtended {
-  dvd: string;
-  boxOffice: string;
-  production: string;
-  website: string;
+  DVD: string;
+  BoxOffice: string;
+  Production: string;
+  Website: string;
 }
 
 interface SeriesType extends RecordTypeExtended {
   totalSeasons: number;
 }
+
+type FilmType = MovieType | SeriesType;
 
 type DataType = {
   movies: RecordType[];
@@ -49,8 +51,9 @@ type DataType = {
 export type {
   RecordType,
   RecordTypeExtended,
-  ReatingsType,
+  RatingsType,
   DataType,
   MovieType,
+  FilmType,
   SeriesType
 };
