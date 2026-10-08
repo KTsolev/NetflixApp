@@ -1,13 +1,13 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'https://www.omdbapi.com/',
+  baseURL: process.env.EXPO_PUBLIC_API_URL,
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
   },
   params: {
-    apikey: '7b7fd71c',
+    apikey: process.env.EXPO_PUBLIC_API_KEY,
   },
 });
 

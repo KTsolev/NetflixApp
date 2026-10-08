@@ -49,18 +49,18 @@ type DataType = {
 }
 
 export enum Genres {
-  Action,
-  Anime,
-  History,
-  Adventure,
-  Crime,
-  Fantasy,
-  SciFi,
-  Drama,
-  Comedy,
-  Horror,
-  Romance,
-  Thriller
+  Action = 'Action',
+  Anime = 'Anime',
+  History = 'History',
+  Adventure = 'Adventure',
+  Crime = 'Crime',
+  Fantasy = 'Fantasy',
+  SciFi = 'Sci-Fi',
+  Drama = 'Drama',
+  Comedy = 'Comedy',
+  Horror = 'Horror',
+  Romance = 'Romance',
+  Thriller = 'Triller'
 }
 
 export type {

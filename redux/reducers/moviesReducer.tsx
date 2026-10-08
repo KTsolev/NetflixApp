@@ -20,10 +20,10 @@ export const sortedMoviesSlice = createSlice({
   initialState,
   reducers: {
     loadMovies: (state, action: PayloadAction<RecordType[]>) => {
-      state.movies = [...state.movies, ...action.payload]
+      state.movies = [...new Set([...state.movies, ...action.payload])]
     },
     loadExtendedMovies: (state, action: PayloadAction<FilmType[]>) => {
-      state.extendedMovies = [...state.extendedMovies, ...action.payload]
+      state.extendedMovies = [...new Set([...state.extendedMovies, ...action.payload])]
     },
     clearMovieArrays: (state, action: PayloadAction<FilmType[]>) => {
       state.extendedMovies = initialState.extendedMovies,

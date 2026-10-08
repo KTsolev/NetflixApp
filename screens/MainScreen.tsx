@@ -4,22 +4,32 @@ import { useSelector } from 'react-redux';
 import useGetMovies from '../hooks/useGetMovies';
 import useGetMovieByIdParalel from '../hooks/useGetMovieByIdParalel'
 import MovieList from '../components/MovieList';
+import { FilmType } from '../types/DataTypes'
+import { useParamsContext } from '../redux/contexts/paramsContext'
 
-const MainScreen = ({ route }: { route: { params: { type: 'string'; searchFor: 'string' } } }) => {
-  const type = route?.params?.type
-  const searchFor = route?.params?.searchFor
+const MainScreen = () => {
+  const { params } = useParamsContext()
+  const type = params.type
+  const searchFor = params.searchFor
+  const genre = params.genre
+
+
   const movies = useSelector((state: any) => state.movies.movies)
+  const moviesDetails = useSelector((state: any) => state.movies.extendedMovies)
+
   const mostScored = useSelector((state: any) => state.sortedMovies.mostScored)
   const latest = useSelector((state: any) => state.sortedMovies.latestMovies)
 
   const label = useMemo(() => {
     if (type === 'series') {
-      return 'All Series'
+      return 'Series'
     } else {
-      return 'All Movies'
+      return 'Movies'
     }
   }, [type])
-  const moviesIds = useMemo(() => movies?.map((item: any) => item.imdbID), [movies?.length])
+
+  const filteredByGenre = useMemo(() => moviesDetails?.filter((item: FilmType) => item.Genre === genre || item.Genre.includes(genre)), [moviesDetails, genre])
+  const moviesIds = useMemo(() => movies?.map((item: FilmType) => item.imdbID), [movies?.length])
   const { isPending, error } = useGetMovies(searchFor || 'all', type || 'movie')
   const queries = useGetMovieByIdParalel(moviesIds)
 
@@ -31,12 +41,12 @@ const MainScreen = ({ route }: { route: { params: { type: 'string'; searchFor: '
     )
   }
 
-  console.log('Sorted', mostScored)
   return (
     <ScrollView style={styles.container}>
+      <MovieList name={`By ${genre}`} list={filteredByGenre} loading={isPending} />
       <MovieList name='Best Scored' list={mostScored} loading={isPending} />
-      <MovieList name="Latest Movies" list={latest} loading={isPending} />
-      <MovieList name={label} list={movies} loading={isPending} />
+      <MovieList name={`Latest ${label}`} list={latest} loading={isPending} />
+      <MovieList name={`All ${label}`} list={movies} loading={isPending} />
     </ScrollView>
   );
 }

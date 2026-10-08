@@ -6,7 +6,7 @@ import { StyleSheet } from 'react-native'
 import { store } from './redux/store';
 import MenuHeader from './components/MenuHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { ParamsProvider } from './redux/contexts/paramsContext'
 const queryClient = new QueryClient();
 
 if (__DEV__) {
@@ -19,8 +19,10 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <NavigationContainer>
           <SafeAreaView style={styles.container} >
-            <MenuHeader />
-            <RootStack />
+            <ParamsProvider>
+              <MenuHeader />
+              <RootStack />
+            </ParamsProvider>
           </SafeAreaView>
         </NavigationContainer>
       </QueryClientProvider>

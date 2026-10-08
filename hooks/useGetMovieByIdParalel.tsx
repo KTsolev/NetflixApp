@@ -1,20 +1,23 @@
 import { useEffect, useRef } from 'react';
-import { useQueries } from '@tanstack/react-query';
+import { useQueries, useQueryClient } from '@tanstack/react-query';
 import { fetchMovieById } from '../services/api';
 import { useDispatch } from 'react-redux'
 import { loadExtendedMovies } from '../redux/reducers/moviesReducer'
 import { sortByImdbRating, sortByDateReleaseDate } from '../helpers/arrayHelpers'
 import { sortMovieByRatings, sortByRelease } from '../redux/reducers/filteredMoviesReducer'
-import reactotron from 'reactotron-react-native';
+import { FilmType } from '../types/DataTypes';
 
 const useGetMovieByIdParalel = (movieIds: string[]) => {
   const dispatch = useDispatch()
-
+  const queryClient = useQueryClient()
+  const prevMovies = useRef<FilmType | null>(null)
   // Current page query
   const queryResults = useQueries({
     queries: movieIds.map((id) => ({
-      queryKey: ['movieId', id],
-      queryFn: () => fetchMovieById(id)
+      queryKey: ['movieItemId', id],
+      queryFn: () => fetchMovieById(id),
+      enabled: queryClient.getQueryData(['movieItemId', id]) === undefined,
+      staleTime: Infinity,
     }))
   })
 
@@ -32,20 +35,12 @@ const useGetMovieByIdParalel = (movieIds: string[]) => {
 
     lastDispatchedVersion.current = resultVersion
     const movies = queryResults.map(item => item.data!)
+
     let sortedByRating = sortByImdbRating(movies)
     sortedByRating = sortedByRating?.reverse()?.slice(0, 10)
 
     let sortedByReleaseDate = sortByDateReleaseDate(movies)
     sortedByReleaseDate = sortedByReleaseDate?.slice(0, 10)
-
-    reactotron?.display?.({
-      name: 'TRON',
-      preview: 'sorted',
-      value: {
-        sortedByRating,
-        sortedByReleaseDate
-      },
-    })
 
     dispatch(loadExtendedMovies(movies))
     dispatch(sortMovieByRatings(sortedByRating))

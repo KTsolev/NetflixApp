@@ -30,11 +30,13 @@ const useGetMovies = (searchTerm: 'all', type: 'movie') => {
 
   // Prefetch the NEXT page inside a useEffect hook
   useEffect(() => {
-    queryClient.query({
-      queryKey: ['movies', searchTerm, type, page],
-      queryFn: () => fetchMovies(searchTerm, type, page),
-      staleTime: 1000 * 60 * 5 // Treat as fresh for 1 minute 
-    })
+    if (prevType.current !== type || prevSearch.current !== searchTerm) {
+      queryClient.query({
+        queryKey: ['movies', searchTerm, type, page],
+        queryFn: () => fetchMovies(searchTerm, type, page),
+        staleTime: 1000 * 60 * 5 // Treat as fresh for 1 minute 
+      })
+    }
   }, [page, queryClient])
 
   useEffect(() => {

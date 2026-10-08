@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../store'
 import type { FilmType } from '../../types/DataTypes'
-import reactotron from 'reactotron-react-native';
 
 // Define a type for the slice state
 export interface MoviewState {
@@ -21,11 +20,6 @@ export const moviesSlice = createSlice({
   initialState,
   reducers: {
     sortMovieByRatings: (state, action: PayloadAction<FilmType[]>) => {
-      reactotron?.display?.({
-        name: 'TRON',
-        preview: 'redux',
-        value: { ...action.payload },
-      })
       state.mostScored = action.payload
     },
     sortByRelease: (state, action: PayloadAction<FilmType[]>) => {

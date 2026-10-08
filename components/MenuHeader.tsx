@@ -3,7 +3,8 @@ import { useState } from 'react'
 import { StyleSheet, Text, View, TouchableHighlight, TextInput, FlatList } from 'react-native';
 import { useNavigation, type NavigationProp } from '@react-navigation/native';
 import { Genres } from '../types/DataTypes'
-
+import { useParamsContext } from '../redux/contexts/paramsContext'
+import GenreItem from '../components/GenreItem'
 type MenuHeaderParams = {
   Home: { type: string; searchFor: string };
 };
@@ -11,15 +12,26 @@ type MenuHeaderParams = {
 const genres = Object.keys(Genres).filter(key => isNaN(Number(key)))
 
 const MenuHeader = () => {
+  const { params, setParams } = useParamsContext()
   const [showInput, setShowInput] = useState(false)
   const [showGenres, setShowGenres] = useState(false)
 
   const navigation = useNavigation<NavigationProp<MenuHeaderParams>>();
   const goHome = () => {
-    navigation.navigate('Home', { type: 'movie', searchFor: 'all' });
+    setParams({
+      type: 'movie',
+      searchFor: 'all',
+      genre: 'Comedy'
+    })
+    navigation.navigate('Home');
   };
   const loadSeries = () => {
-    navigation.navigate('Home', { type: 'series', searchFor: 'all' });
+    setParams({
+      type: 'series',
+      searchFor: 'all',
+      genre: 'Comedy'
+    })
+    navigation.navigate('Home');
   };
   return (
     <View>
@@ -37,15 +49,8 @@ const MenuHeader = () => {
               <Text style={styles.menuItem}>Genres</Text>
               {showGenres && <FlatList
                 data={genres}
-                style={{
-                  position: 'absolute',
-                  top: 28,
-                  left: 0,
-                  zIndex: 999,
-                  minWidth: 130,
-                  backgroundColor: '#2828285f'
-                }}
-                renderItem={({ item, index }) => <Text key={index} style={styles.menuItem}>{item}</Text>}
+                style={styles.genresList}
+                renderItem={({ item, index }) => <GenreItem item={item} index={index} clbk={() => setShowGenres(false)} />}
               />}
             </View>
           </TouchableHighlight>
@@ -66,6 +71,14 @@ const styles = StyleSheet.create({
     marginTop: 8,
     justifyContent: 'center',
     verticalAlign: 'middle',
+  },
+  genresList: {
+    position: 'absolute',
+    top: 28,
+    left: 0,
+    zIndex: 999,
+    minWidth: 130,
+    backgroundColor: '#282828d8'
   },
   innerContainer: {
     flex: 1,
