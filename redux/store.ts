@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import moviesReducer from './reducers/moviesReducer'
+import sortedMoviesReducer from './reducers/filteredMoviesReducer'
 
 export const store = configureStore({
   reducer: {
-    movies: moviesReducer
+    movies: moviesReducer,
+    sortedMovies: sortedMoviesReducer
   }
 })
 

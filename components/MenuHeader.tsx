@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { StyleSheet, Text, View, TouchableHighlight, TextInput, FlatList } from 'react-native';
 import { useNavigation, type NavigationProp } from '@react-navigation/native';
 import { Genres } from '../types/DataTypes'
+
 type MenuHeaderParams = {
   Home: { type: string; searchFor: string };
 };

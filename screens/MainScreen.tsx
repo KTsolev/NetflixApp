@@ -1,14 +1,27 @@
+import { useMemo } from 'react'
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { useSelector } from 'react-redux';
 import useGetMovies from '../hooks/useGetMovies';
+import useGetMovieByIdParalel from '../hooks/useGetMovieByIdParalel'
 import MovieList from '../components/MovieList';
 
-const MainScreen = ({ route }: { route: { params: { type: any; searchFor: any } } }) => {
-  const type = route.params.type
-  const searchFor = route.params.searchFor
-
+const MainScreen = ({ route }: { route: { params: { type: 'string'; searchFor: 'string' } } }) => {
+  const type = route?.params?.type
+  const searchFor = route?.params?.searchFor
   const movies = useSelector((state: any) => state.movies.movies)
-  const { isPending, error } = useGetMovies(searchFor, type)
+  const mostScored = useSelector((state: any) => state.sortedMovies.mostScored)
+  const latest = useSelector((state: any) => state.sortedMovies.latestMovies)
+
+  const label = useMemo(() => {
+    if (type === 'series') {
+      return 'All Series'
+    } else {
+      return 'All Movies'
+    }
+  }, [type])
+  const moviesIds = useMemo(() => movies?.map((item: any) => item.imdbID), [movies?.length])
+  const { isPending, error } = useGetMovies(searchFor || 'all', type || 'movie')
+  const queries = useGetMovieByIdParalel(moviesIds)
 
   if (error) {
     return (
@@ -18,11 +31,12 @@ const MainScreen = ({ route }: { route: { params: { type: any; searchFor: any } 
     )
   }
 
-  console.log('movies', movies);
-
+  console.log('Sorted', mostScored)
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <MovieList name="Popular Movies" list={movies} loading={isPending} />
+    <ScrollView style={styles.container}>
+      <MovieList name='Best Scored' list={mostScored} loading={isPending} />
+      <MovieList name="Latest Movies" list={latest} loading={isPending} />
+      <MovieList name={label} list={movies} loading={isPending} />
     </ScrollView>
   );
 }
@@ -33,8 +47,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#141414',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingBottom: 60
   },
   menuItem: {
     color: '#e8e8e8',

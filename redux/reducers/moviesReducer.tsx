@@ -7,7 +7,6 @@ import type { FilmType, RecordType } from '../../types/DataTypes'
 export interface MoviewState {
   movies: RecordType[],
   extendedMovies: FilmType[]
-
 }
 
 // Define the initial state using that type
@@ -16,26 +15,27 @@ const initialState: MoviewState = {
   extendedMovies: []
 }
 
-export const moviesSlice = createSlice({
+export const sortedMoviesSlice = createSlice({
   name: 'movies',
   initialState,
   reducers: {
     loadMovies: (state, action: PayloadAction<RecordType[]>) => {
       state.movies = [...state.movies, ...action.payload]
     },
-    emptyMovies: (state, action: PayloadAction<RecordType[]>) => {
-      state.movies = initialState.movies
-    },
     loadExtendedMovies: (state, action: PayloadAction<FilmType[]>) => {
       state.extendedMovies = [...state.extendedMovies, ...action.payload]
+    },
+    clearMovieArrays: (state, action: PayloadAction<FilmType[]>) => {
+      state.extendedMovies = initialState.extendedMovies,
+        state.movies = initialState.movies
     },
   }
 })
 
 // Action creators are generated for each case reducer function
-export const { loadMovies, emptyMovies } = moviesSlice.actions
+export const { loadMovies, loadExtendedMovies, clearMovieArrays } = sortedMoviesSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectCount = (state: RootState) => state.movies
 
-export default moviesSlice.reducer
+export default sortedMoviesSlice.reducer

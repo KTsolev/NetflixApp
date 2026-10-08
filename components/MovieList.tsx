@@ -37,16 +37,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#141414',
     justifyContent: 'flex-start',
+    marginBottom: 40
   },
   innerContainer: {
     flex: 1,
-    marginTop: 40
+    marginTop: 20
   },
   movieContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     width: 220,
-    height: 280,
+    height: 200,
     marginRight: 10,
     borderColor: '#e8e8e8',
     paddingVertical: 10,

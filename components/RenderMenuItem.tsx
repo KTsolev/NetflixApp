@@ -1,8 +1,8 @@
 import { StyleSheet, Text, FlatList } from 'react-native';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from "uuid"
 import type { RatingsType } from '../types/DataTypes'
 import { isRatings } from '../helpers/typeHelpers';
-import { v4 as uuidv4 } from "uuid"
-import 'react-native-get-random-values';
 
 const RenderMenuItem = ({ list }: { list: (string | RatingsType)[] }) => {
   return (

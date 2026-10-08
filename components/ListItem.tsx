@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import type { RecordType } from '../types/DataTypes'
 import { useNavigation } from '@react-navigation/native';
+import type { RecordType } from '../types/DataTypes'
 
 const ListItem = ({ movie }: { movie: RecordType }) => {
   const navigation = useNavigation<any>();
