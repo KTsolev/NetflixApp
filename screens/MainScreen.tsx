@@ -3,22 +3,17 @@ import { useSelector } from 'react-redux';
 import useGetMovies from '../hooks/useGetMovies';
 import MovieList from '../components/MovieList';
 
-const MainScreen = () => {
-  const movies = useSelector((state: any) => state.movies.movies)
-  const { isPending, error } = useGetMovies('all')
+const MainScreen = ({ route }: { route: { params: { type: any; searchFor: any } } }) => {
+  const type = route.params.type
+  const searchFor = route.params.searchFor
 
-  if (isPending) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
-      </View>
-    )
-  }
+  const movies = useSelector((state: any) => state.movies.movies)
+  const { isPending, error } = useGetMovies(searchFor, type)
 
   if (error) {
     return (
       <View style={styles.container}>
-        <Text>{error.message}</Text>
+        <Text style={styles.menuItem}>Someting went wrong when retrieving data...</Text>
       </View>
     )
   }
@@ -27,8 +22,7 @@ const MainScreen = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text>Main Screen Netflix app</Text>
-      <MovieList name="Popular Movies" list={movies} />
+      <MovieList name="Popular Movies" list={movies} loading={isPending} />
     </ScrollView>
   );
 }
@@ -41,5 +35,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#141414',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  menuItem: {
+    color: '#e8e8e8',
+    fontSize: 22,
+    textAlign: 'center',
+    lineHeight: 24,
+    fontWeight: 'bold',
   },
 });

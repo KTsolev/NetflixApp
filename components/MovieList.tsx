@@ -2,21 +2,31 @@
 import { StyleSheet, Text, View, FlatList } from 'react-native';
 import type { RecordType } from '../types/DataTypes'
 import ListItem from './ListItem';
+import Skeleton from './Skeleton';
 
-const MovieList = ({ name, list }: { name: string; list: RecordType[] }) => {
-
+const MovieList = ({ name, list, loading }: { name: string; list: RecordType[], loading: boolean }) => {
+  const array = Array.from([1, 2, 3, 4, 5, 6, 7, 8])
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
         <Text style={styles.headerItem}>{name}</Text>
-        <FlatList
+        {loading && <FlatList
+          data={array}
+          horizontal
+          keyExtractor={(item, index) => String(index)}
+          renderItem={({ item }) => (
+            <Skeleton style={styles.movieContainer} />
+          )}
+        />}
+        {!loading && <FlatList
           data={list}
           horizontal
+          ListEmptyComponent={() => <Text style={styles.headerItem}>No items...</Text>}
           keyExtractor={(item, index) => String(item?.imdbID || index)}
           renderItem={({ item }) => (
             <ListItem movie={item} />
           )}
-        />
+        />}
       </View>
     </View>
   );
@@ -31,6 +41,16 @@ const styles = StyleSheet.create({
   innerContainer: {
     flex: 1,
     marginTop: 40
+  },
+  movieContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 220,
+    height: 280,
+    marginRight: 10,
+    borderColor: '#e8e8e8',
+    paddingVertical: 10,
+    borderWidth: 1,
   },
   headerItem: {
     color: '#e8e8e8',

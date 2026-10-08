@@ -1,12 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchMovieById, } from '../services/api';
-
+import { fetchMovieById } from '../services/api';
 
 const useGetMovieById = (movieId: string) => {
-
   // Current page query
   const { data, isPending, error } = useQuery({
-    queryKey: ['movie', movieId],
+    queryKey: ['movieId', movieId],
     queryFn: () => fetchMovieById(movieId)
   })
 

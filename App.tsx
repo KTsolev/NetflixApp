@@ -2,9 +2,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import RootStack from './routes/RootStack';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Provider } from 'react-redux';
+import { StyleSheet } from 'react-native'
 import { store } from './redux/store';
 import MenuHeader from './components/MenuHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
 const queryClient = new QueryClient();
 
 if (__DEV__) {
@@ -16,7 +18,7 @@ const App = () => {
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <NavigationContainer>
-          <SafeAreaView style={{ flex: 1, borderColor: '#e8e8e8', borderWidth: 1, backgroundColor: '#141414' }} >
+          <SafeAreaView style={styles.container} >
             <MenuHeader />
             <RootStack />
           </SafeAreaView>
@@ -25,6 +27,14 @@ const App = () => {
     </Provider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 16,
+    backgroundColor: '#141414'
+  }
+})
 
 export default App
 

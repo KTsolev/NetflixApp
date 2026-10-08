@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native';
-import useGetMovieById from '../hooks/useGetMivieById';
+import useGetMovieById from '../hooks/useGetMovieById';
 import DetailsItem from '../components/DetailsItem';
 import { isMovie } from '../helpers/typeHelpers';
+import Skeleton from '../components/Skeleton'
 
 const DetailsScreen = ({ route }: { route: any }) => {
   const { movieId } = route.params;
@@ -11,7 +12,7 @@ const DetailsScreen = ({ route }: { route: any }) => {
   if (isPending) {
     return (
       <View style={styles.container}>
-        <Text>Loading...</Text>
+        <Skeleton style={styles.movieContainer} />
       </View>
     )
   }
@@ -19,7 +20,7 @@ const DetailsScreen = ({ route }: { route: any }) => {
   if (error) {
     return (
       <View style={styles.container}>
-        <Text>{error.message}</Text>
+        <Text style={styles.menuItem}>Someting went wrong when retrieving data...</Text>
       </View>
     )
   }
@@ -40,5 +41,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#141414',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  movieContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: '#e8e8e8',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderWidth: 1,
+  },
+  menuItem: {
+    color: '#e8e8e8',
+    textAlign: 'center',
+    fontSize: 22,
+    lineHeight: 24,
+    fontWeight: 'bold',
   },
 });

@@ -43,9 +43,24 @@ interface SeriesType extends RecordTypeExtended {
 type FilmType = MovieType | SeriesType;
 
 type DataType = {
-  movies: RecordType[];
+  Search: RecordType[];
   totalResults: number;
-  response: boolean;
+  Response: boolean;
+}
+
+export enum Genres {
+  Action,
+  Anime,
+  History,
+  Adventure,
+  Crime,
+  Fantasy,
+  SciFi,
+  Drama,
+  Comedy,
+  Horror,
+  Romance,
+  Thriller
 }
 
 export type {

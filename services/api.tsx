@@ -1,14 +1,14 @@
 import api from './axios';
 import { DataType, MovieType, SeriesType } from '../types/DataTypes';
 
-export const fetchMovies = async (search: string, page: number): Promise<DataType> => {
+export const fetchMovies = async (search: string, type: string, page: number): Promise<DataType> => {
 
   const response = await api.get('', {
     params: {
       apikey: api.defaults.params.apikey,
       s: search,
-      page: page,
-      limit: 50,
+      page,
+      type,
     },
   });
   if (response.data.Response === 'False') {

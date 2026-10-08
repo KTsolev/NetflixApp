@@ -1,52 +1,98 @@
 
-import { StyleSheet, Text, View, TouchableHighlight } from 'react-native';
+import { useState } from 'react'
+import { StyleSheet, Text, View, TouchableHighlight, TextInput, FlatList } from 'react-native';
+import { useNavigation, type NavigationProp } from '@react-navigation/native';
+import { Genres } from '../types/DataTypes'
+type MenuHeaderParams = {
+  Home: { type: string; searchFor: string };
+};
+
+const genres = Object.keys(Genres).filter(key => isNaN(Number(key)))
 
 const MenuHeader = () => {
+  const [showInput, setShowInput] = useState(false)
+  const [showGenres, setShowGenres] = useState(false)
+
+  const navigation = useNavigation<NavigationProp<MenuHeaderParams>>();
+  const goHome = () => {
+    navigation.navigate('Home', { type: 'movie', searchFor: 'all' });
+  };
+  const loadSeries = () => {
+    navigation.navigate('Home', { type: 'series', searchFor: 'all' });
+  };
   return (
-    <View style={styles.container}>
-      <View style={styles.innerContainer}>
-        <Text style={styles.headerItem}>Netflix</Text>
-        <TouchableHighlight>
-          <Text style={styles.menuItem}>Home</Text>
-        </TouchableHighlight>
-        <TouchableHighlight>
-          <Text style={styles.menuItem}>Series</Text>
-        </TouchableHighlight>
-        <TouchableHighlight>
-          <Text style={styles.menuItem}>Genres</Text>
-        </TouchableHighlight>
-        <TouchableHighlight>
-          <Text style={styles.menuItem}>Search</Text>
-        </TouchableHighlight>
+    <View>
+      <View style={styles.container}>
+        <View style={styles.innerContainer}>
+          <Text style={styles.headerItem}>Netflix</Text>
+          <TouchableHighlight onPress={goHome}>
+            <Text style={styles.menuItem}>Home</Text>
+          </TouchableHighlight>
+          <TouchableHighlight onPress={loadSeries}>
+            <Text style={styles.menuItem}>Series</Text>
+          </TouchableHighlight>
+          <TouchableHighlight style={{ position: 'relative', overflow: 'visible', zIndex: 10 }} onPress={() => setShowGenres(!showGenres)}>
+            <View>
+              <Text style={styles.menuItem}>Genres</Text>
+              {showGenres && <FlatList
+                data={genres}
+                style={{
+                  position: 'absolute',
+                  top: 28,
+                  left: 0,
+                  zIndex: 999,
+                  minWidth: 130,
+                  backgroundColor: '#2828285f'
+                }}
+                renderItem={({ item, index }) => <Text key={index} style={styles.menuItem}>{item}</Text>}
+              />}
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight onPress={() => setShowInput(!showInput)}>
+            <Text style={styles.menuItem}>Search</Text>
+          </TouchableHighlight>
+        </View>
       </View>
+      {showInput && <TextInput placeholder='Search...' style={styles.input} />}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: 80,
+    height: 90,
     paddingHorizontal: 20,
-    backgroundColor: '#141414',
-    justifyContent: 'flex-start',
+    marginTop: 8,
+    justifyContent: 'center',
+    verticalAlign: 'middle',
   },
   innerContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 50
   },
   menuItem: {
     color: '#e8e8e8',
     fontSize: 18,
     lineHeight: 22,
+    paddingVertical: 8,
+    paddingHorizontal: 6,
     fontWeight: 'bold',
+  },
+  input: {
+    color: '#030303',
+    backgroundColor: '#fbf7f7',
+    borderColor: '#fbf7f7',
+    marginHorizontal: 20,
+    borderWidth: 1,
+    paddingVertical: 12,
+    fontSize: 16,
   },
   headerItem: {
     color: '#800101',
     fontSize: 24,
-    lineHeight: 28,
+    lineHeight: 26,
     textTransform: 'uppercase',
     fontWeight: 'bold'
   }
