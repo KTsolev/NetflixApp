@@ -1,8 +1,9 @@
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { StyleSheet, Text, View, TouchableHighlight, TextInput, FlatList } from 'react-native';
 import { useNavigation, type NavigationProp } from '@react-navigation/native';
 import { Genres } from '../types/DataTypes'
+import debounce from 'lodash.debounce'
 import { useParamsContext } from '../redux/contexts/paramsContext'
 import GenreItem from '../components/GenreItem'
 type MenuHeaderParams = {
@@ -15,8 +16,9 @@ const MenuHeader = () => {
   const { params, setParams } = useParamsContext()
   const [showInput, setShowInput] = useState(false)
   const [showGenres, setShowGenres] = useState(false)
-
+  const [text, setText] = useState('');
   const navigation = useNavigation<NavigationProp<MenuHeaderParams>>();
+
   const goHome = () => {
     setParams({
       type: 'movie',
@@ -25,6 +27,7 @@ const MenuHeader = () => {
     })
     navigation.navigate('Home');
   };
+
   const loadSeries = () => {
     setParams({
       type: 'series',
@@ -33,6 +36,27 @@ const MenuHeader = () => {
     })
     navigation.navigate('Home');
   };
+
+  const debouncedFetch = useCallback(
+    debounce((query: string) => {
+      if (!query) return;
+      setParams({
+        ...params,
+        searchFor: query
+      })
+      navigation.navigate('Home');
+    }, 500), // 500ms delay
+    []
+  );
+
+  const handleChangeText = (value: string) => {
+    setText(value);
+    debouncedFetch(value);
+  };
+
+  useEffect(() => {
+    return () => debouncedFetch.cancel();
+  }, [debouncedFetch]);
   return (
     <View>
       <View style={styles.container}>
@@ -59,7 +83,7 @@ const MenuHeader = () => {
           </TouchableHighlight>
         </View>
       </View>
-      {showInput && <TextInput placeholder='Search...' style={styles.input} />}
+      {showInput && <TextInput placeholder='Search...' style={styles.input} value={text} onChangeText={handleChangeText} />}
     </View>
   );
 }

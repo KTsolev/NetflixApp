@@ -18,7 +18,6 @@ const useGetMovies = (searchTerm: 'all', type: 'movie') => {
     queryKey: ['movies', searchTerm, type, page],
     queryFn: () => fetchMovies(searchTerm, type, page)
   })
-
   useEffect(() => {
     if (prevType.current !== type || prevSearch.current !== searchTerm) {
       dispatch(clearMovieArrays([]))
@@ -26,7 +25,7 @@ const useGetMovies = (searchTerm: 'all', type: 'movie') => {
       prevType.current = type
       prevSearch.current = searchTerm
     }
-  }, [type])
+  }, [type, searchTerm])
 
   // Prefetch the NEXT page inside a useEffect hook
   useEffect(() => {

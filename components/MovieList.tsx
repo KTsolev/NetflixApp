@@ -22,7 +22,7 @@ const MovieList = ({ name, list, loading }: { name: string; list: RecordType[], 
           data={list}
           horizontal
           ListEmptyComponent={() => <Text style={styles.headerItem}>No items...</Text>}
-          keyExtractor={(item, index) => String(item?.imdbID || index)}
+          keyExtractor={(item, index) => String(item?.imdbID + index)}
           renderItem={({ item }) => (
             <ListItem movie={item} />
           )}

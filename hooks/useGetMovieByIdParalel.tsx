@@ -5,12 +5,10 @@ import { useDispatch } from 'react-redux'
 import { loadExtendedMovies } from '../redux/reducers/moviesReducer'
 import { sortByImdbRating, sortByDateReleaseDate } from '../helpers/arrayHelpers'
 import { sortMovieByRatings, sortByRelease } from '../redux/reducers/filteredMoviesReducer'
-import { FilmType } from '../types/DataTypes';
 
 const useGetMovieByIdParalel = (movieIds: string[]) => {
   const dispatch = useDispatch()
   const queryClient = useQueryClient()
-  const prevMovies = useRef<FilmType | null>(null)
   // Current page query
   const queryResults = useQueries({
     queries: movieIds.map((id) => ({
