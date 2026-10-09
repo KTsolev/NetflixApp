@@ -40,6 +40,8 @@ const MenuHeader = () => {
   const debouncedFetch = useCallback(
     debounce((query: string) => {
       if (!query) return;
+      if (query?.length < 2) return;
+
       setParams({
         ...params,
         searchFor: query

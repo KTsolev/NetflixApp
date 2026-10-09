@@ -31,7 +31,7 @@ const MainScreen = () => {
   const filteredByGenre = useMemo(() => moviesDetails?.filter((item: FilmType) => item.Genre === genre || item.Genre.includes(genre)), [moviesDetails, genre])
   const moviesIds = useMemo(() => movies?.map((item: FilmType) => item.imdbID), [movies?.length])
   const { isPending, error } = useGetMovies(searchFor || 'all', type || 'movie')
-  const queries = useGetMovieByIdParalel(moviesIds)
+  useGetMovieByIdParalel(moviesIds)
 
   if (error) {
     return (
