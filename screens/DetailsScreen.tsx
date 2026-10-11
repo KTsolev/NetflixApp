@@ -1,13 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native';
-import useGetMovieById from '../hooks/useGetMovieById';
-import DetailsItem from '../components/DetailsItem';
-import { isMovie } from '../helpers/typeHelpers';
+import { StyleSheet, Text, View } from 'react-native'
+import useGetMovieById from '../hooks/useGetMovieById'
+import DetailsItem from '../components/DetailsItem'
+import { isMovie } from '../helpers/typeHelpers'
 import Skeleton from '../components/Skeleton'
 
 const DetailsScreen = ({ route }: { route: any }) => {
-  const { movieId } = route.params;
-  const { isPending, data: movie, error } = useGetMovieById(movieId);
-  const movieIsMovie = isMovie(movie);
+  const { movieId } = route.params
+  const { isPending, data: movie, error } = useGetMovieById(movieId)
+  const movieIsMovie = isMovie(movie)
 
   if (isPending) {
     return (
@@ -58,4 +58,4 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontWeight: 'bold',
   },
-});
+})

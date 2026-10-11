@@ -1,18 +1,18 @@
 
-import { StyleSheet, Text, View, Image, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, Dimensions } from 'react-native'
 import type { FilmType, MovieType, SeriesType } from '../types/DataTypes'
-import RenderMenuItem from './RenderMenuItem';
+import RenderMenuItem from './RenderMenuItem'
 
 const { width } = Dimensions.get('window');
 
 const DetailsItem = ({ movie, isMovie }: { movie: FilmType; isMovie: boolean }) => {
-  const actors = movie?.Actors?.split(',').map(actor => actor.trim());
-  const genres = movie?.Genre?.split(',').map(genre => genre.trim());
-  const writers = movie?.Writer?.split(',').map(writer => writer.trim());
+  const actors = movie?.Actors?.split(',').map(actor => actor.trim())
+  const genres = movie?.Genre?.split(',').map(genre => genre.trim())
+  const writers = movie?.Writer?.split(',').map(writer => writer.trim())
 
   const renderBoxOffice = () => {
     if (isMovie) {
-      const film = movie as MovieType;
+      const film = movie as MovieType
 
       return (
         <>
@@ -29,7 +29,7 @@ const DetailsItem = ({ movie, isMovie }: { movie: FilmType; isMovie: boolean }) 
             <Text style={styles.menuItem}>{film?.Website}</Text>
           </View>
         </>
-      );
+      )
     }
 
     const seriesMovie = movie as SeriesType;
@@ -39,7 +39,7 @@ const DetailsItem = ({ movie, isMovie }: { movie: FilmType; isMovie: boolean }) 
         <Text style={styles.menuItem}>Total Seasons:</Text>
         <Text style={styles.menuItem}>{seriesMovie?.totalSeasons}</Text>
       </View>
-    );
+    )
   }
 
   return (
@@ -153,6 +153,6 @@ const styles = StyleSheet.create({
   movieDetailsContainer: {
     justifyContent: 'center',
   }
-});
+})
 
 export default DetailsItem

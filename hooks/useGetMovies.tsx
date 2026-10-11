@@ -8,7 +8,6 @@ import { clearSortedArrays } from '../redux/reducers/filteredMoviesReducer'
 const useGetMovies = (searchTerm: 'all', type: 'movie') => {
   const queryClient = useQueryClient()
   const [page, setPage] = useState(1)
-
   const dispatch = useDispatch()
   const prevType = useRef(null)
   const prevSearch = useRef(null)
@@ -16,7 +15,8 @@ const useGetMovies = (searchTerm: 'all', type: 'movie') => {
   // Current page query
   const { data, isPending, error } = useQuery({
     queryKey: ['movies', searchTerm, type, page],
-    queryFn: () => fetchMovies(searchTerm, type, page)
+    queryFn: () => fetchMovies(searchTerm, type, page),
+    staleTime: 1000 * 60 * 5,
   })
   useEffect(() => {
     if (prevType.current !== type || prevSearch.current !== searchTerm) {
@@ -30,10 +30,11 @@ const useGetMovies = (searchTerm: 'all', type: 'movie') => {
   // Prefetch the NEXT page inside a useEffect hook
   useEffect(() => {
     if (prevType.current !== type || prevSearch.current !== searchTerm) {
+      console.log('in load main query...')
       queryClient.query({
         queryKey: ['movies', searchTerm, type, page],
         queryFn: () => fetchMovies(searchTerm, type, page),
-        staleTime: 1000 * 60 * 5 // Treat as fresh for 1 minute 
+        staleTime: 1000 * 60 * 5, // Treat as fresh for 5 minute 
       })
     }
   }, [page, queryClient])

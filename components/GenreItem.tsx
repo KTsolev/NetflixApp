@@ -1,6 +1,6 @@
 
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { useNavigation, type NavigationProp } from '@react-navigation/native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native'
+import { useNavigation, type NavigationProp } from '@react-navigation/native'
 import { useParamsContext } from '../redux/contexts/paramsContext'
 
 type GenreItemProps = {
@@ -10,7 +10,7 @@ type GenreItemProps = {
 };
 
 type HeaderParams = {
-  Home: { type: string; searchFor: string };
+  Home: { type: string; searchFor: string }
 };
 
 const GenreItem = ({ item, index, clbk }: GenreItemProps) => {

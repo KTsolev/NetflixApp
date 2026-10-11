@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import { useSelector } from 'react-redux';
-import useGetMovies from '../hooks/useGetMovies';
+import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import { useSelector } from 'react-redux'
+import useGetMovies from '../hooks/useGetMovies'
 import useGetMovieByIdParalel from '../hooks/useGetMovieByIdParalel'
-import MovieList from '../components/MovieList';
+import MovieList from '../components/MovieList'
 import { FilmType } from '../types/DataTypes'
 import { useParamsContext } from '../redux/contexts/paramsContext'
 
@@ -12,8 +12,6 @@ const MainScreen = () => {
   const type = params.type
   const searchFor = params.searchFor
   const genre = params.genre
-
-
   const movies = useSelector((state: any) => state.movies.movies)
   const moviesDetails = useSelector((state: any) => state.movies.extendedMovies)
 
@@ -29,7 +27,7 @@ const MainScreen = () => {
   }, [type])
 
   const filteredByGenre = useMemo(() => moviesDetails?.filter((item: FilmType) => item.Genre === genre || item.Genre.includes(genre)), [moviesDetails, genre])
-  const moviesIds = useMemo(() => movies?.map((item: FilmType) => item.imdbID), [movies?.length])
+  const moviesIds = useMemo(() => movies?.map((item: FilmType) => item.imdbID), [movies])
   const { isPending, error } = useGetMovies(searchFor || 'all', type || 'movie')
   useGetMovieByIdParalel(moviesIds)
 
@@ -66,4 +64,4 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontWeight: 'bold',
   },
-});
+})

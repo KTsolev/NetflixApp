@@ -1,8 +1,8 @@
 
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList } from 'react-native'
 import type { RecordType } from '../types/DataTypes'
-import ListItem from './ListItem';
-import Skeleton from './Skeleton';
+import ListItem from './ListItem'
+import Skeleton from './Skeleton'
 
 const MovieList = ({ name, list, loading }: { name: string; list: RecordType[], loading: boolean }) => {
   const array = Array.from([1, 2, 3, 4, 5, 6, 7, 8])
@@ -62,5 +62,5 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     fontWeight: 'bold'
   },
-});
+})
 export default MovieList

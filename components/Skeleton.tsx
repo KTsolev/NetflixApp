@@ -1,15 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react'
 import {
   Animated,
   StyleSheet,
   ViewStyle,
-} from 'react-native';
+} from 'react-native'
 
 interface SkeletonProps {
-  width?: number | string;
-  height?: number;
-  borderRadius?: number;
-  style?: ViewStyle;
+  width?: number | string
+  height?: number
+  borderRadius?: number
+  style?: ViewStyle
 }
 
 const Skeleton: React.FC<SkeletonProps> = ({
@@ -18,7 +18,7 @@ const Skeleton: React.FC<SkeletonProps> = ({
   borderRadius = 4,
   style,
 }) => {
-  const opacity = useRef(new Animated.Value(0.3)).current;
+  const opacity = useRef(new Animated.Value(0.3)).current
 
   useEffect(() => {
     const animation = Animated.loop(
@@ -34,11 +34,11 @@ const Skeleton: React.FC<SkeletonProps> = ({
           useNativeDriver: true,
         }),
       ])
-    );
+    )
 
-    animation.start();
+    animation.start()
 
-    return () => animation.stop();
+    return () => animation.stop()
   }, [opacity]);
 
   return (
@@ -63,4 +63,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Skeleton;
+export default Skeleton

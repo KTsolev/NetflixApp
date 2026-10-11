@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo, useState, ReactNode } from "react";
+import React, { createContext, useContext, useMemo, useState, ReactNode } from "react"
 
 interface IParamsContext {
   params: {
@@ -36,12 +36,12 @@ export const ParamsProvider = ({
 }
 
 export const useParamsContext = () => {
-  const context = useContext(ParamsContext);
+  const context = useContext(ParamsContext)
 
   // Guard clause to catch usage bugs during development
   if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error('useTheme must be used within a ThemeProvider')
   }
 
-  return context;
+  return context
 }

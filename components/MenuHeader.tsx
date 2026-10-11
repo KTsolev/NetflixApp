@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
-import { StyleSheet, Text, View, TouchableHighlight, TextInput, FlatList } from 'react-native';
-import { useNavigation, type NavigationProp } from '@react-navigation/native';
+import { StyleSheet, Text, View, TouchableHighlight, TextInput, FlatList } from 'react-native'
+import { useNavigation, type NavigationProp } from '@react-navigation/native'
 import { Genres } from '../types/DataTypes'
 import debounce from 'lodash.debounce'
 import { useParamsContext } from '../redux/contexts/paramsContext'
@@ -16,8 +16,8 @@ const MenuHeader = () => {
   const { params, setParams } = useParamsContext()
   const [showInput, setShowInput] = useState(false)
   const [showGenres, setShowGenres] = useState(false)
-  const [text, setText] = useState('');
-  const navigation = useNavigation<NavigationProp<MenuHeaderParams>>();
+  const [text, setText] = useState('')
+  const navigation = useNavigation<NavigationProp<MenuHeaderParams>>()
 
   const goHome = () => {
     setParams({
@@ -25,7 +25,7 @@ const MenuHeader = () => {
       searchFor: 'all',
       genre: 'Comedy'
     })
-    navigation.navigate('Home');
+    navigation.navigate('Home')
   };
 
   const loadSeries = () => {
@@ -34,13 +34,13 @@ const MenuHeader = () => {
       searchFor: 'all',
       genre: 'Comedy'
     })
-    navigation.navigate('Home');
+    navigation.navigate('Home')
   };
 
   const debouncedFetch = useCallback(
     debounce((query: string) => {
       if (!query) return;
-      if (query?.length < 2) return;
+      if (query?.length < 2) return
 
       setParams({
         ...params,
@@ -87,7 +87,7 @@ const MenuHeader = () => {
       </View>
       {showInput && <TextInput placeholder='Search...' style={styles.input} value={text} onChangeText={handleChangeText} />}
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -136,5 +136,5 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     fontWeight: 'bold'
   }
-});
+})
 export default MenuHeader

@@ -48,3 +48,8 @@ const compareDate = (date1: string, date2: string): number => {
   else if (firstDate < secondDate) return -1;
   else return 0;
 }
+
+export const areArraysEqual = (a: string[], b: string[]): boolean => {
+  if (!a || !b) return false
+  return a?.toString() === b?.toString()
+}

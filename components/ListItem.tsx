@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import type { RecordType } from '../types/DataTypes'
 
 const ListItem = ({ movie }: { movie: RecordType }) => {
@@ -56,6 +56,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 10,
   }
-});
+})
 
 export default ListItem
