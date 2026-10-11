@@ -21,9 +21,7 @@ const MenuHeader = () => {
 
   const goHome = () => {
     setParams({
-      type: 'movie',
-      searchFor: 'all',
-      genre: 'Comedy'
+      ...params
     })
     navigation.navigate('Home')
   };
@@ -31,6 +29,15 @@ const MenuHeader = () => {
   const loadSeries = () => {
     setParams({
       type: 'series',
+      searchFor: 'all',
+      genre: 'Comedy'
+    })
+    navigation.navigate('Home')
+  };
+
+  const loadMovies = () => {
+    setParams({
+      type: 'movie',
       searchFor: 'all',
       genre: 'Comedy'
     })
@@ -59,31 +66,38 @@ const MenuHeader = () => {
   useEffect(() => {
     return () => debouncedFetch.cancel();
   }, [debouncedFetch]);
+
   return (
-    <View>
-      <View style={styles.container}>
-        <View style={styles.innerContainer}>
-          <Text style={styles.headerItem}>Netflix</Text>
-          <TouchableHighlight onPress={goHome}>
-            <Text style={styles.menuItem}>Home</Text>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={loadSeries}>
-            <Text style={styles.menuItem}>Series</Text>
-          </TouchableHighlight>
-          <TouchableHighlight style={{ position: 'relative', overflow: 'visible', zIndex: 10 }} onPress={() => setShowGenres(!showGenres)}>
-            <View>
-              <Text style={styles.menuItem}>Genres</Text>
-              {showGenres && <FlatList
-                data={genres}
-                style={styles.genresList}
-                renderItem={({ item, index }) => <GenreItem item={item} index={index} clbk={() => setShowGenres(false)} />}
-              />}
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={() => setShowInput(!showInput)}>
-            <Text style={styles.menuItem}>Search</Text>
-          </TouchableHighlight>
-        </View>
+    <View style={styles.container}>
+      <View style={styles.innerContainer}>
+        <Text style={styles.headerItem}>Netflix</Text>
+      </View>
+      <View style={styles.innerContainer}>
+        <TouchableHighlight onPress={goHome}>
+          <Text style={styles.menuItem}>Home</Text>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={loadMovies}>
+          <Text style={styles.menuItem}>Movies</Text>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={loadSeries}>
+          <Text style={styles.menuItem}>Series</Text>
+        </TouchableHighlight>
+        <TouchableHighlight style={styles.genresContainer} onPress={() => setShowGenres(!showGenres)}>
+          <View>
+            <Text style={styles.menuItem}>Genres</Text>
+            {showGenres && <FlatList
+              data={genres}
+              style={styles.genresList}
+              renderItem={({ item, index }) => <GenreItem item={item} index={index} clbk={() => setShowGenres(false)} />}
+            />}
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={() => {
+          setText('')
+          setShowInput(!showInput)
+        }}>
+          <Text style={styles.menuItem}>Search</Text>
+        </TouchableHighlight>
       </View>
       {showInput && <TextInput placeholder='Search...' style={styles.input} value={text} onChangeText={handleChangeText} />}
     </View>
@@ -92,11 +106,16 @@ const MenuHeader = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 90,
+    height: 140,
     paddingHorizontal: 20,
-    marginTop: 8,
+    marginTop: 16,
     justifyContent: 'center',
     verticalAlign: 'middle',
+  },
+  genresContainer: {
+    position: 'relative',
+    overflow: 'visible',
+    zIndex: 10
   },
   genresList: {
     position: 'absolute',

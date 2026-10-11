@@ -13,7 +13,7 @@ const MainScreen = () => {
   const searchFor = params.searchFor
   const genre = params.genre
   const moviesDetails = useSelector((state: any) => state.movies.extendedMovies)
-  const { isPending, data, error } = useGetMovies(searchFor || 'all', type || 'movie')
+  const { isPending, data, error } = useGetMovies(searchFor, type)
   const movies = useSelector((state: any) => state.movies.movies)
   const filteredByGenre = useMemo(() => moviesDetails?.filter((item: FilmType) => item.Genre === genre || item.Genre.includes(genre)), [moviesDetails, genre])
   const moviesIds = useMemo(() => movies?.map((item: FilmType) => item.imdbID), [movies])
@@ -29,12 +29,6 @@ const MainScreen = () => {
       return 'Movies'
     }
   }, [type])
-
-  useEffect(() => {
-    console.log('from main screen...')
-
-  }, [data, isPending])
-
 
   if (error) {
     return (

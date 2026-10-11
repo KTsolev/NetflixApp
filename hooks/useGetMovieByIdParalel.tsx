@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { loadExtendedMovies } from '../redux/reducers/moviesReducer'
 import { sortByImdbRating, sortByDateReleaseDate } from '../helpers/arrayHelpers'
 import { sortMovieByRatings, sortByRelease } from '../redux/reducers/filteredMoviesReducer'
-import reactotron from 'reactotron-react-native';
 import type { RootState } from '../redux/store'
 
 const useGetMovieByIdParalel = (movieIds: string[]) => {
@@ -20,11 +19,11 @@ const useGetMovieByIdParalel = (movieIds: string[]) => {
   const hasSortedMovies = mostScored.length > 0 && latest.length > 0
 
   const queryResults = useQueries({
-    queries: memoizedIds.map((id) => ({
+    queries: memoizedIds.flatMap((id) => ({
       queryKey: ['transaction', id],
       queryFn: () => fetchMovieById(id),
       enabled: queryClient.getQueryData(['transaction', id]) === undefined,
-      staleTime: Infinity, // Keep data fresh to stop unwanted background fetches
+      staleTime: 1000 * 60 * 5, // Keep data fresh to stop unwanted background fetches
     }))
   })
 
@@ -44,12 +43,6 @@ const useGetMovieByIdParalel = (movieIds: string[]) => {
 
     if (allFinished) {
       lastDispatchedVersion.current = resultVersion
-      reactotron.display({
-        important: true,
-        name: 'CONSOLE.LOG',
-        preview: 'queryRes',
-        value: { queryResults },
-      })
 
       const movies = queryResults.map(item => item.data!)
       dispatch(loadExtendedMovies(movies))

@@ -1,16 +1,19 @@
 import { useEffect, useState, useRef } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
 import { fetchMovies } from '../services/api';
 import { loadMovies, clearMovieArrays } from '../redux/reducers/moviesReducer';
 import { clearSortedArrays } from '../redux/reducers/filteredMoviesReducer'
 
-const useGetMovies = (searchTerm: 'all', type: 'movie') => {
-  const queryClient = useQueryClient()
-  const [page, setPage] = useState(1)
+const useGetMovies = (searchTerm: string, type: string) => {
+  const scopeKey = JSON.stringify([searchTerm, type])
+  const [pagination, setPagination] = useState({ scopeKey, page: 1 })
+  const page = pagination.scopeKey === scopeKey ? pagination.page : 1
   const dispatch = useDispatch()
-  const prevType = useRef(null)
-  const prevSearch = useRef(null)
+  const prevType = useRef<string | null>(null)
+  const prevSearch = useRef<string | null>(null)
+  const activeScope = useRef(scopeKey)
+  activeScope.current = scopeKey
 
   // Current page query
   const { data, isPending, error } = useQuery({
@@ -27,28 +30,26 @@ const useGetMovies = (searchTerm: 'all', type: 'movie') => {
     }
   }, [type, searchTerm])
 
-  // Prefetch the NEXT page inside a useEffect hook
   useEffect(() => {
-    if (prevType.current !== type || prevSearch.current !== searchTerm) {
-      console.log('in load main query...')
-      queryClient.query({
-        queryKey: ['movies', searchTerm, type, page],
-        queryFn: () => fetchMovies(searchTerm, type, page),
-        staleTime: 1000 * 60 * 5, // Treat as fresh for 5 minute 
-      })
+    if (pagination.scopeKey !== scopeKey) {
+      setPagination({ scopeKey, page: 1 })
     }
-  }, [page, queryClient])
+  }, [pagination.scopeKey, scopeKey])
 
   useEffect(() => {
-    if (data) {
-      if (page < 10 && page < data?.totalResults) { // fetch fitst 10 pages only, because the API has a limit of 1000 results
-        setPage((prevPage) => prevPage + 1)
+    if (data && activeScope.current === scopeKey) {
+      if (page < 10 && page < Number(data.totalResults ?? 0)) {
+        setPagination(current => (
+          current.scopeKey === scopeKey && current.page === page
+            ? { scopeKey, page: page + 1 }
+            : current
+        ))
       }
-      dispatch(loadMovies(data?.Search))
+      dispatch(loadMovies(data.Search ?? []))
     }
-  }, [data, dispatch])
+  }, [data, dispatch, page, scopeKey])
 
-  return { isPending, error }
+  return { isPending, data, error }
 };
 
 export default useGetMovies;
