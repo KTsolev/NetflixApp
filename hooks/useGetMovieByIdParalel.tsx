@@ -1,27 +1,30 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useQueries, useQueryClient } from '@tanstack/react-query';
 import { fetchMovieById } from '../services/api';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { loadExtendedMovies } from '../redux/reducers/moviesReducer'
 import { sortByImdbRating, sortByDateReleaseDate } from '../helpers/arrayHelpers'
 import { sortMovieByRatings, sortByRelease } from '../redux/reducers/filteredMoviesReducer'
 import reactotron from 'reactotron-react-native';
-import { useIsFocused } from '@react-navigation/native'
+import type { RootState } from '../redux/store'
 
 const useGetMovieByIdParalel = (movieIds: string[]) => {
   const dispatch = useDispatch()
   const queryClient = useQueryClient()
-  const isFocused = useIsFocused();
   const movieIdsKey = JSON.stringify(movieIds ?? [])
   const memoizedIds = useMemo(() => JSON.parse(movieIdsKey) as string[], [movieIdsKey]);
+  const mostScored = useSelector((state: RootState) => state.sortedMovies.mostScored)
+  const latest = useSelector((state: RootState) => state.sortedMovies.latestMovies)
+  const moviesDetails = useSelector((state: RootState) => state.movies.extendedMovies)
+
+  const hasSortedMovies = mostScored.length > 0 && latest.length > 0
 
   const queryResults = useQueries({
     queries: memoizedIds.map((id) => ({
       queryKey: ['transaction', id],
       queryFn: () => fetchMovieById(id),
       enabled: queryClient.getQueryData(['transaction', id]) === undefined,
-      staleTime: 5 * 60 * 1000, // Keep data fresh to stop unwanted background fetches
-      subscribed: isFocused
+      staleTime: Infinity, // Keep data fresh to stop unwanted background fetches
     }))
   })
 
@@ -33,6 +36,7 @@ const useGetMovieByIdParalel = (movieIds: string[]) => {
     if (
       queryResults.length === 0 ||
       !allFinished ||
+      (moviesDetails && hasSortedMovies) ||
       resultVersion === lastDispatchedVersion.current
     ) {
       return
@@ -46,20 +50,21 @@ const useGetMovieByIdParalel = (movieIds: string[]) => {
         preview: 'queryRes',
         value: { queryResults },
       })
+
       const movies = queryResults.map(item => item.data!)
-      console.log('in main query2 ....')
-      let sortedByRating = sortByImdbRating(movies)
-      sortedByRating = sortedByRating?.reverse()?.slice(0, 10)
-
-      let sortedByReleaseDate = sortByDateReleaseDate(movies)
-      sortedByReleaseDate = sortedByReleaseDate?.slice(0, 10)
-
       dispatch(loadExtendedMovies(movies))
-      dispatch(sortMovieByRatings(sortedByRating))
-      dispatch(sortByRelease(sortedByReleaseDate))
+
+      if (!hasSortedMovies) {
+        const sortedByRating = [...sortByImdbRating(movies)].reverse().slice(0, 10)
+        dispatch(sortMovieByRatings(sortedByRating))
+
+        const sortedByReleaseDate = sortByDateReleaseDate(movies).slice(0, 10)
+        dispatch(sortByRelease(sortedByReleaseDate))
+      }
+
     }
 
-  }, [allFinished, dispatch])
+  }, [allFinished, moviesDetails, hasSortedMovies])
 
   return queryResults
 }
